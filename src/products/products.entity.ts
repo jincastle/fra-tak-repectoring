@@ -1,4 +1,4 @@
-import { User } from 'src/users/users.entity';
+import { Review, User } from 'src/users/users.entity';
 import {
   Entity,
   Column,
@@ -7,6 +7,7 @@ import {
   CreateDateColumn,
   ManyToOne,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
 
 @Entity()
