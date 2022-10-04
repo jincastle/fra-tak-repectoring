@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
@@ -8,6 +8,7 @@ import { OrdersModule } from './orders/orders.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import * as Joi from 'joi';
+import { LoggerMiddleware } from './common/logger.middleware';
 
 @Module({
   imports: [
@@ -32,7 +33,7 @@ import * as Joi from 'joi';
       password: process.env.DB_PASSWD,
       database: process.env.DB_NAME,
       entities: ['dist/**/*.entity.{ts,js}'],
-      synchronize: false, //스키마 바꿀때마다 데이터 초기화됨 배포할때는 true
+      synchronize: true, //스키마 바꿀때마다 데이터 초기화됨 배포할때는 true
       autoLoadEntities: true,
       logging: true,
     }),
@@ -44,4 +45,9 @@ import * as Joi from 'joi';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  private readonly isDev: boolean = process.env.MODE === 'dev' ? true : false;
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
+}
