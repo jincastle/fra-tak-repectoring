@@ -10,4 +10,11 @@ export class ProductsService {
   private productsRepository: Repository<Product>;
   private maincategoryRepository: Repository<MainCategory>;
   private subcategoryRepository: Repository<SubCategory>;
+
+  async SubcategoryAll() {
+    const result = await this.subcategoryRepository.find({
+      relations: ['maincategory'],
+    });
+    return result;
+  }
 }
