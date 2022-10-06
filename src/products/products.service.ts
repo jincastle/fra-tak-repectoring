@@ -17,4 +17,19 @@ export class ProductsService {
     });
     return result;
   }
+
+  async ProductcategoryAll() {
+    const result = await this.productsRepository.find({
+      relations: ['subcategory', 'maincategory'],
+    });
+    return result;
+  }
+
+  async Product(productId: number) {
+    const result = await this.productsRepository.find({
+      relations: ['subcategory'],
+      where: { id: productId },
+    });
+    return result;
+  }
 }
